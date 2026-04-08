@@ -125,25 +125,73 @@ body.propagation-modal-landscape-body-lock
     transform-origin: center center;
 }
 
+/* 横屏查看：工具条与筛选项不伸缩，图表区占满剩余高度（树图 / 关系图） */
+#propagationPathModalLandscapeRoot:fullscreen .propagation-path-view-switch,
+#propagationPathModalLandscapeRoot:-webkit-full-screen .propagation-path-view-switch,
+#propagationPathModalLandscapeRoot.propagation-modal-landscape-sim .propagation-path-view-switch
+{
+    flex: 0 0 auto;
+}
+
+#propagationPathModalLandscapeRoot:fullscreen #propagationPathModalFiltersBlock,
+#propagationPathModalLandscapeRoot:-webkit-full-screen #propagationPathModalFiltersBlock,
+#propagationPathModalLandscapeRoot.propagation-modal-landscape-sim #propagationPathModalFiltersBlock
+{
+    flex: 0 0 auto;
+}
+
 #propagationPathModalLandscapeRoot:fullscreen #propagationTreeViewWrap,
-#propagationPathModalLandscapeRoot:fullscreen #propagationRelationView,
 #propagationPathModalLandscapeRoot:-webkit-full-screen #propagationTreeViewWrap,
+#propagationPathModalLandscapeRoot.propagation-modal-landscape-sim #propagationTreeViewWrap
+{
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0%;
+    min-height: 0;
+    margin: 0;
+    height: auto !important;
+    max-height: none !important;
+}
+
+/* 关系图外层用内联 style 切换 display，此处不用 !important 改 display，避免压过 display:none */
+#propagationPathModalLandscapeRoot:fullscreen #propagationRelationView,
 #propagationPathModalLandscapeRoot:-webkit-full-screen #propagationRelationView,
-#propagationPathModalLandscapeRoot.propagation-modal-landscape-sim #propagationTreeViewWrap,
 #propagationPathModalLandscapeRoot.propagation-modal-landscape-sim #propagationRelationView
+{
+    flex: 1 1 0%;
+    min-height: 0;
+    margin: 0;
+    position: relative;
+    height: auto !important;
+    max-height: none !important;
+}
+
+#propagationPathModalLandscapeRoot:fullscreen #propagationRelationView .propagation-path-chart-wrap,
+#propagationPathModalLandscapeRoot:-webkit-full-screen #propagationRelationView .propagation-path-chart-wrap,
+#propagationPathModalLandscapeRoot.propagation-modal-landscape-sim #propagationRelationView .propagation-path-chart-wrap
+{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0;
+    width: 100%;
+}
+
+#propagationPathModalLandscapeRoot:fullscreen #propagationPathChart.propagation-path-chart-inner,
+#propagationPathModalLandscapeRoot:-webkit-full-screen #propagationPathChart.propagation-path-chart-inner,
+#propagationPathModalLandscapeRoot.propagation-modal-landscape-sim #propagationPathChart.propagation-path-chart-inner,
+#propagationPathModalLandscapeRoot:fullscreen #propagationRelationChart,
+#propagationPathModalLandscapeRoot:-webkit-full-screen #propagationRelationChart,
+#propagationPathModalLandscapeRoot.propagation-modal-landscape-sim #propagationRelationChart
 {
     flex: 1 1 auto;
     min-height: 0;
-    margin: 0;
-}
-
-#propagationPathModalLandscapeRoot:fullscreen .propagation-path-chart-wrap,
-#propagationPathModalLandscapeRoot:-webkit-full-screen .propagation-path-chart-wrap,
-#propagationPathModalLandscapeRoot.propagation-modal-landscape-sim .propagation-path-chart-wrap
-{
-    height: auto !important;
-    flex: 1 1 auto;
-    min-height: 200px;
+    width: 100%;
+    height: 100% !important;
 }
 
 @media (max-width: 768px)
