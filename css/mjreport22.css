@@ -74,10 +74,141 @@
     gap: 8px;
 }
 
-/* 横屏查看收起筛选项：由 JS 添加类；增加父级选择器提高优先级，避免被其它 .propagation-path-filters 规则覆盖 */
-#propagationPathModalLandscapeRoot #propagationPathModalFiltersBlock.propagation-modal-filters-collapsed-landscape
+/* 竖屏弹窗内：筛选项仍为普通文档流，底部抽屉外壳不浮层 */
+#propagationPathModalLandscapeRoot:not(:fullscreen):not(.propagation-modal-landscape-sim) .propagation-modal-filters-sheet
+{
+    display: block;
+    position: static;
+    width: 100%;
+}
+
+#propagationPathModalLandscapeRoot:not(:fullscreen):not(.propagation-modal-landscape-sim) .propagation-modal-filters-sheet-mask,
+#propagationPathModalLandscapeRoot:not(:fullscreen):not(.propagation-modal-landscape-sim) .propagation-modal-filters-sheet-head
 {
     display: none !important;
+}
+
+#propagationPathModalLandscapeRoot:not(:fullscreen):not(.propagation-modal-landscape-sim) .propagation-modal-filters-sheet-panel
+{
+    position: static;
+    transform: none !important;
+    max-height: none;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* 横屏查看：筛选项从底部抽屉弹出（.propagation-modal-filters-sheet-open 为展开） */
+#propagationPathModalLandscapeRoot:fullscreen .propagation-modal-filters-sheet,
+#propagationPathModalLandscapeRoot:-webkit-full-screen .propagation-modal-filters-sheet,
+#propagationPathModalLandscapeRoot.propagation-modal-landscape-sim .propagation-modal-filters-sheet
+{
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1000005;
+    pointer-events: none;
+    visibility: hidden;
+    transition: visibility 0.2s;
+}
+
+#propagationPathModalLandscapeRoot:fullscreen .propagation-modal-filters-sheet.propagation-modal-filters-sheet-open,
+#propagationPathModalLandscapeRoot:-webkit-full-screen .propagation-modal-filters-sheet.propagation-modal-filters-sheet-open,
+#propagationPathModalLandscapeRoot.propagation-modal-landscape-sim .propagation-modal-filters-sheet.propagation-modal-filters-sheet-open
+{
+    pointer-events: auto;
+    visibility: visible;
+}
+
+#propagationPathModalLandscapeRoot:fullscreen .propagation-modal-filters-sheet-mask,
+#propagationPathModalLandscapeRoot:-webkit-full-screen .propagation-modal-filters-sheet-mask,
+#propagationPathModalLandscapeRoot.propagation-modal-landscape-sim .propagation-modal-filters-sheet-mask
+{
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+#propagationPathModalLandscapeRoot:fullscreen .propagation-modal-filters-sheet.propagation-modal-filters-sheet-open .propagation-modal-filters-sheet-mask,
+#propagationPathModalLandscapeRoot:-webkit-full-screen .propagation-modal-filters-sheet.propagation-modal-filters-sheet-open .propagation-modal-filters-sheet-mask,
+#propagationPathModalLandscapeRoot.propagation-modal-landscape-sim .propagation-modal-filters-sheet.propagation-modal-filters-sheet-open .propagation-modal-filters-sheet-mask
+{
+    opacity: 1;
+}
+
+#propagationPathModalLandscapeRoot:fullscreen .propagation-modal-filters-sheet-panel,
+#propagationPathModalLandscapeRoot:-webkit-full-screen .propagation-modal-filters-sheet-panel,
+#propagationPathModalLandscapeRoot.propagation-modal-landscape-sim .propagation-modal-filters-sheet-panel
+{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: min(70vh, 420px);
+    padding: 0 0 env(safe-area-inset-bottom, 0);
+    background: #fff;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+#propagationPathModalLandscapeRoot:fullscreen .propagation-modal-filters-sheet.propagation-modal-filters-sheet-open .propagation-modal-filters-sheet-panel,
+#propagationPathModalLandscapeRoot:-webkit-full-screen .propagation-modal-filters-sheet.propagation-modal-filters-sheet-open .propagation-modal-filters-sheet-panel,
+#propagationPathModalLandscapeRoot.propagation-modal-landscape-sim .propagation-modal-filters-sheet.propagation-modal-filters-sheet-open .propagation-modal-filters-sheet-panel
+{
+    transform: translateY(0);
+}
+
+.propagation-modal-filters-sheet-head
+{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px 8px;
+    border-bottom: 1px solid #eee;
+    flex-shrink: 0;
+}
+
+.propagation-modal-filters-sheet-title
+{
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+}
+
+.propagation-modal-filters-sheet-close
+{
+    border: none;
+    background: transparent;
+    font-size: 22px;
+    line-height: 1;
+    padding: 4px 8px;
+    color: #666;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.propagation-modal-filters-sheet-close:active
+{
+    background: #f0f0f0;
+}
+
+#propagationPathModalLandscapeRoot:fullscreen .propagation-modal-filters-sheet-panel .propagation-path-filters,
+#propagationPathModalLandscapeRoot:-webkit-full-screen .propagation-modal-filters-sheet-panel .propagation-path-filters,
+#propagationPathModalLandscapeRoot.propagation-modal-landscape-sim .propagation-modal-filters-sheet-panel .propagation-path-filters
+{
+    margin-bottom: 0;
+    border-radius: 0;
+    border: none;
+    padding: 10px 12px 14px;
 }
 
 /* 「展开筛选项」显隐仅由 JS 的 hidden 控制，避免 iOS 下媒体查询与视口组合误判 */
@@ -129,13 +260,6 @@ body.propagation-modal-landscape-body-lock
 #propagationPathModalLandscapeRoot:fullscreen .propagation-path-view-switch,
 #propagationPathModalLandscapeRoot:-webkit-full-screen .propagation-path-view-switch,
 #propagationPathModalLandscapeRoot.propagation-modal-landscape-sim .propagation-path-view-switch
-{
-    flex: 0 0 auto;
-}
-
-#propagationPathModalLandscapeRoot:fullscreen #propagationPathModalFiltersBlock,
-#propagationPathModalLandscapeRoot:-webkit-full-screen #propagationPathModalFiltersBlock,
-#propagationPathModalLandscapeRoot.propagation-modal-landscape-sim #propagationPathModalFiltersBlock
 {
     flex: 0 0 auto;
 }

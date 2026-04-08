@@ -6659,6 +6659,13 @@ legend: {
                     </div>
                 </div>
                 <div id="propagationPathModalLandscapeRoot">
+                <div id="propagationPathModalFiltersSheet" class="propagation-modal-filters-sheet">
+                    <div class="propagation-modal-filters-sheet-mask" data-role="close-filters-sheet" aria-hidden="true"></div>
+                    <div class="propagation-modal-filters-sheet-panel" role="dialog" aria-modal="true" aria-labelledby="propagationModalFiltersSheetTitle">
+                        <div class="propagation-modal-filters-sheet-head">
+                            <span id="propagationModalFiltersSheetTitle" class="propagation-modal-filters-sheet-title">筛选条件</span>
+                            <button type="button" class="propagation-modal-filters-sheet-close" data-role="close-filters-sheet" aria-label="关闭">×</button>
+                        </div>
                 <div id="propagationPathModalFiltersBlock" class="propagation-path-filters">
                     <div class="form-group">
                         <span class="propagation-filter-label" id="propagationFilterMediaLabel"><b>媒体级别</b></span>
@@ -6667,6 +6674,8 @@ legend: {
                     <div class="form-group">
                         <span class="propagation-filter-label" id="propagationFilterInteractLabel"><b>互动量</b></span>
                         <div id="propagationFilterInteractWrap" class="propagation-filter-btn-row" role="group" aria-labelledby="propagationFilterInteractLabel"></div>
+                    </div>
+                </div>
                     </div>
                 </div>
                 <div class="propagation-path-view-switch" role="group" aria-label="传播路径展示切换">
@@ -7151,12 +7160,13 @@ legend: {
 
     function syncPropagationModalFiltersCollapseUI() {
         var filters = document.getElementById('propagationPathModalFiltersBlock');
+        var sheet = document.getElementById('propagationPathModalFiltersSheet');
         var expandBtn = document.getElementById('propagationPathModalFiltersExpandBtn');
         if (!filters || !expandBtn) return;
         var land = isPropagationModalLandscapeActive();
         /* 仅判断「横屏查看」模式：不在此用视口宽度，避免 iOS 全屏下尺寸异常导致筛选项不收起 */
         if (!land) {
-            filters.classList.remove('propagation-modal-filters-collapsed-landscape');
+            if (sheet) sheet.classList.remove('propagation-modal-filters-sheet-open');
             propagationModalFiltersExpandedInLandscape = false;
             expandBtn.setAttribute('hidden', 'hidden');
             expandBtn.setAttribute('aria-hidden', 'true');
@@ -7166,13 +7176,15 @@ legend: {
         expandBtn.setAttribute('aria-hidden', 'false');
         var labelEl = expandBtn.querySelector('.propagation-modal-filters-expand-label');
         if (propagationModalFiltersExpandedInLandscape) {
-            filters.classList.remove('propagation-modal-filters-collapsed-landscape');
+            if (sheet) sheet.classList.add('propagation-modal-filters-sheet-open');
+            if (sheet) sheet.setAttribute('aria-hidden', 'false');
             if (labelEl) labelEl.textContent = '收起筛选项';
             expandBtn.setAttribute('aria-label', '收起筛选项');
             expandBtn.setAttribute('title', '收起筛选项');
             expandBtn.setAttribute('aria-expanded', 'true');
         } else {
-            filters.classList.add('propagation-modal-filters-collapsed-landscape');
+            if (sheet) sheet.classList.remove('propagation-modal-filters-sheet-open');
+            if (sheet) sheet.setAttribute('aria-hidden', 'true');
             if (labelEl) labelEl.textContent = '展开筛选项';
             expandBtn.setAttribute('aria-label', '展开筛选项');
             expandBtn.setAttribute('title', '展开筛选项');
@@ -7310,6 +7322,17 @@ legend: {
                 setTimeout(resizePropagationModalChartsOnly, 60);
             });
         }
+        document.querySelectorAll('#propagationPathModalFiltersSheet [data-role="close-filters-sheet"]').forEach(function (el) {
+            if (el.getAttribute('data-filters-sheet-close-inited')) return;
+            el.setAttribute('data-filters-sheet-close-inited', '1');
+            el.addEventListener('click', function (e) {
+                e.preventDefault();
+                if (!isPropagationModalLandscapeActive()) return;
+                propagationModalFiltersExpandedInLandscape = false;
+                syncPropagationModalFiltersCollapseUI();
+                setTimeout(resizePropagationModalChartsOnly, 60);
+            });
+        });
         function onPropagationModalFsChange() {
             if (!document.getElementById('propagationPathModal')) return;
             syncPropagationModalLandscapeButton();
