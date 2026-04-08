@@ -1067,6 +1067,28 @@ body.prop-insight-landscape-body-lock
     min-width: 0;
 }
 
+/* 传播脉络话题行：更多筛选 → 全部 → 话题组（与横屏底栏顺序一致） */
+#propInsightPathWrap .prop-insight-topic-switch #propInsightPathMoreSettingsWrap
+{
+    order: 0;
+}
+
+#propInsightPathWrap .prop-insight-topic-switch #propInsightPathMoreBtn
+{
+    order: 1;
+}
+
+#propInsightPathWrap .prop-insight-topic-switch #propInsightShowAllBtn
+{
+    order: 2;
+    margin-left: 0;
+}
+
+#propInsightPathWrap .prop-insight-topic-switch #propInsightTopicSwitchWrap
+{
+    order: 3;
+}
+
 #propInsightShowAllBtn
 {
     margin-left: auto;
