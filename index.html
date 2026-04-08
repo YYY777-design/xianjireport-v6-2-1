@@ -4744,6 +4744,14 @@ legend: {
                     }
 
                     function shouldRotateInsightPseudoLandscape() {
+                        try {
+                            if (window.matchMedia && window.matchMedia('(orientation: landscape)').matches) {
+                                return false;
+                            }
+                            if (window.matchMedia && window.matchMedia('(orientation: portrait)').matches) {
+                                return true;
+                            }
+                        } catch (e) {}
                         return window.innerHeight >= window.innerWidth;
                     }
 
@@ -4752,6 +4760,22 @@ legend: {
                         var target = document.getElementById(insightPseudoLandscapeTargetId);
                         if (!target) return;
                         target.classList.toggle('prop-insight-landscape-sim-rotated', shouldRotateInsightPseudoLandscape());
+                    }
+
+                    function scheduleInsightPseudoLandscapeRotationSync() {
+                        syncInsightPseudoLandscapeRotation();
+                        if (typeof requestAnimationFrame === 'function') {
+                            requestAnimationFrame(function () {
+                                syncInsightPseudoLandscapeRotation();
+                            });
+                        }
+                        setTimeout(function () {
+                            syncInsightPseudoLandscapeRotation();
+                            if (insightPseudoLandscapeTargetId === 'propInsightPathWrap' && pathChart) pathChart.resize();
+                            if (insightPseudoLandscapeTargetId === 'propInsightPathWrap' && relationChart) relationChart.resize();
+                            if (insightPseudoLandscapeTargetId === 'propInsightSankeyWrap' && sankeyChart) sankeyChart.resize();
+                            resizePropCharts();
+                        }, 150);
                     }
 
                     function enterInsightPseudoLandscape(targetEl) {
@@ -5003,6 +5027,12 @@ legend: {
                     } else {
                         boot();
                     }
+                    window.addEventListener('orientationchange', function () {
+                        syncInsightPathMoreSettings();
+                        if (insightPseudoLandscapeActive) {
+                            scheduleInsightPseudoLandscapeRotationSync();
+                        }
+                    });
                     window.addEventListener('resize', function () {
                         syncInsightPathMoreSettings();
                         if (insightPseudoLandscapeActive) {
