@@ -3318,7 +3318,7 @@ legend: {
                     z-index: 32;
                     display: flex;
                     align-items: center;
-                    flex-wrap: wrap;
+                    flex-wrap: nowrap;
                     gap: 6px;
                     padding: 6px 8px;
                     border-radius: 10px;
@@ -3330,8 +3330,10 @@ legend: {
                 #propInsightPathWrap:fullscreen #propInsightTopicSwitchWrap,
                 #propInsightPathWrap:-webkit-full-screen #propInsightTopicSwitchWrap,
                 #propInsightPathWrap.prop-insight-landscape-sim #propInsightTopicSwitchWrap {
-                    flex: 0 0 100%;
-                    max-width: 100%;
+                    order: 3;
+                    flex: 1 1 auto;
+                    min-width: 0;
+                    max-width: none;
                     display: flex;
                     flex-wrap: nowrap;
                     overflow-x: auto;
@@ -3349,27 +3351,24 @@ legend: {
                 #propInsightPathWrap:fullscreen #propInsightPathMoreBtn,
                 #propInsightPathWrap:-webkit-full-screen #propInsightPathMoreBtn,
                 #propInsightPathWrap.prop-insight-landscape-sim #propInsightPathMoreBtn {
+                    order: 1;
                     display: inline-flex;
                     align-items: center;
                     justify-content: center;
+                    position: static;
+                    margin-left: 0;
+                    flex: 0 0 auto;
+                    width: 30px;
+                    height: 30px;
+                    padding: 0;
                 }
                 #propInsightPathWrap.prop-insight-landscape-path-mode #propInsightShowAllBtn,
                 #propInsightPathWrap:fullscreen #propInsightShowAllBtn,
                 #propInsightPathWrap:-webkit-full-screen #propInsightShowAllBtn,
                 #propInsightPathWrap.prop-insight-landscape-sim #propInsightShowAllBtn {
+                    order: 2;
                     margin-left: 0;
                     flex: 0 0 auto;
-                }
-                #propInsightPathWrap.prop-insight-landscape-path-mode #propInsightPathMoreBtn,
-                #propInsightPathWrap:fullscreen #propInsightPathMoreBtn,
-                #propInsightPathWrap:-webkit-full-screen #propInsightPathMoreBtn,
-                #propInsightPathWrap.prop-insight-landscape-sim #propInsightPathMoreBtn {
-                    position: static;
-                    margin-left: 4px;
-                    flex: 0 0 auto;
-                    width: 30px;
-                    height: 30px;
-                    padding: 0;
                 }
                 #propInsightPathMoreBtn {
                     display: none;
