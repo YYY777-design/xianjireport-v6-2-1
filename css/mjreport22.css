@@ -449,7 +449,7 @@ body.propagation-modal-landscape-body-lock
     #propInsightSankeyWrap.prop-insight-landscape-sim #propInsightSankeyChart
     {
         height: calc(100dvh - 54px) !important;
-        margin-top: 0 !important;
+       /* margin-top: 0 !important;*/
     }
 }
 
@@ -469,7 +469,7 @@ body.prop-insight-landscape-body-lock
     width: 100vw !important;
     height: 100vh !important;
     background: #ffffff;
-    padding: 44px 8px 10px;
+    padding: 24px 8px 10px;
     box-sizing: border-box;
     position: relative;
 }
