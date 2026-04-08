@@ -7137,6 +7137,11 @@ legend: {
         return !!getPropagationPathModalFullscreenElement() || propagationModalLandscapePseudo;
     }
 
+    /** 手机横屏时 innerWidth 会变成长边（>768），须用较短边判断是否为移动端布局 */
+    function isPropagationModalCompactViewport() {
+        return Math.min(window.innerWidth, window.innerHeight) <= 768;
+    }
+
     function syncPropagationModalLandscapeButton() {
         var btn = document.getElementById('propagationPathLandscapeBtn');
         if (!btn) return;
@@ -7154,7 +7159,7 @@ legend: {
         var expandBtn = document.getElementById('propagationPathModalFiltersExpandBtn');
         if (!filters || !expandBtn) return;
         var land = isPropagationModalLandscapeActive();
-        var mobile = window.innerWidth <= 768;
+        var mobile = isPropagationModalCompactViewport();
         if (!land || !mobile) {
             filters.classList.remove('propagation-modal-filters-collapsed-landscape');
             propagationModalFiltersExpandedInLandscape = false;
@@ -7304,7 +7309,7 @@ legend: {
         if (expandFiltersBtn) {
             expandFiltersBtn.addEventListener('click', function (e) {
                 e.preventDefault();
-                if (!isPropagationModalLandscapeActive() || window.innerWidth > 768) return;
+                if (!isPropagationModalLandscapeActive() || !isPropagationModalCompactViewport()) return;
                 propagationModalFiltersExpandedInLandscape = !propagationModalFiltersExpandedInLandscape;
                 syncPropagationModalFiltersCollapseUI();
                 setTimeout(resizePropagationModalChartsOnly, 60);
