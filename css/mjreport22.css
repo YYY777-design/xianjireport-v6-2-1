@@ -66,6 +66,28 @@
     opacity: 0.85;
 }
 
+.propagation-path-modal-landscape-toolbar
+{
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 8px;
+}
+
+#propagationPathModalFiltersBlock.propagation-modal-filters-collapsed-landscape
+{
+    display: none !important;
+}
+
+/* 仅宽高均偏大的视口视为桌面；手机横屏宽度常 >768 但高度较小，不得隐藏 */
+@media (min-width: 769px) and (min-height: 481px)
+{
+    #propagationPathModalFiltersExpandBtn
+    {
+        display: none !important;
+    }
+}
+
 body.propagation-modal-landscape-body-lock
 {
     overflow: hidden !important;
@@ -758,11 +780,26 @@ body.prop-insight-landscape-body-lock
     padding: 12px 16px 16px;
 }
 
-@media (min-width: 769px)
+@media (min-width: 769px) and (min-height: 481px)
 {
     #propagationPathLandscapeInline
     {
         display: none;
+    }
+}
+
+/* 手机横屏：宽度常 >768，需单独显示横屏/展开筛选项工具条（与 max-width:768 块一致） */
+@media (min-width: 769px) and (max-height: 520px)
+{
+    #propagationPathModal #propagationPathLandscapeInline
+    {
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex: 0 0 auto;
+        margin-right: 0;
+        position: relative;
+        z-index: 3;
     }
 }
 
