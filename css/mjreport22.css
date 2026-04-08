@@ -74,19 +74,13 @@
     gap: 8px;
 }
 
-#propagationPathModalFiltersBlock.propagation-modal-filters-collapsed-landscape
+/* 横屏查看收起筛选项：由 JS 添加类；增加父级选择器提高优先级，避免被其它 .propagation-path-filters 规则覆盖 */
+#propagationPathModalLandscapeRoot #propagationPathModalFiltersBlock.propagation-modal-filters-collapsed-landscape
 {
     display: none !important;
 }
 
-/* 仅宽高均偏大的视口视为桌面；手机横屏宽度常 >768 但高度较小，不得隐藏 */
-@media (min-width: 769px) and (min-height: 481px)
-{
-    #propagationPathModalFiltersExpandBtn
-    {
-        display: none !important;
-    }
-}
+/* 「展开筛选项」显隐仅由 JS 的 hidden 控制，避免 iOS 下媒体查询与视口组合误判 */
 
 body.propagation-modal-landscape-body-lock
 {
