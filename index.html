@@ -6659,7 +6659,7 @@ legend: {
                     </div>
                 </div>
                 <div id="propagationPathModalLandscapeRoot">
-                <div class="propagation-path-filters">
+                <div id="propagationPathModalFiltersBlock" class="propagation-path-filters">
                     <div class="form-group">
                         <span class="propagation-filter-label" id="propagationFilterMediaLabel"><b>媒体级别</b></span>
                         <div id="propagationFilterMediaWrap" class="propagation-filter-btn-row" role="group" aria-labelledby="propagationFilterMediaLabel"></div>
@@ -6670,8 +6670,9 @@ legend: {
                     </div>
                 </div>
                 <div class="propagation-path-view-switch" role="group" aria-label="传播路径展示切换">
-                    <div id="propagationPathLandscapeInline">
+                    <div id="propagationPathLandscapeInline" class="propagation-path-modal-landscape-toolbar">
                         <button type="button" id="propagationPathLandscapeBtn" class="btn btn-sm propagation-modal-landscape-text-btn" aria-pressed="false" title="横屏查看" aria-label="横屏查看"><i class="fas fa-expand-alt" aria-hidden="true"></i><span class="propagation-modal-landscape-btn-label">横屏查看</span></button>
+                        <button type="button" id="propagationPathModalFiltersExpandBtn" class="btn btn-sm propagation-modal-landscape-text-btn propagation-modal-filters-expand-btn" hidden aria-hidden="true" title="展开筛选项" aria-label="展开筛选项" aria-expanded="false"><i class="fas fa-sliders-h" aria-hidden="true"></i><span class="propagation-modal-filters-expand-label">展开筛选项</span></button>
                     </div>
                     <div id="propagationTreeLegendInline" class="propagation-layer-legend" style="display:none;"></div>
                     <div id="propagationRelationLegendInline" class="propagation-layer-legend" style="display:none;"></div>
@@ -7124,6 +7125,7 @@ legend: {
     var propagationCurrentView = 'tree';
     var propagationModalLandscapePseudo = false;
     var propagationModalLandscapeBound = false;
+    var propagationModalFiltersExpandedInLandscape = false;
 
     function getPropagationPathModalFullscreenElement() {
         var el = document.fullscreenElement || document.webkitFullscreenElement || null;
@@ -7145,6 +7147,37 @@ legend: {
         btn.innerHTML = on
             ? '<i class="fas fa-compress-alt" aria-hidden="true"></i><span class="propagation-modal-landscape-btn-label">切换竖屏</span>'
             : '<i class="fas fa-expand-alt" aria-hidden="true"></i><span class="propagation-modal-landscape-btn-label">横屏查看</span>';
+    }
+
+    function syncPropagationModalFiltersCollapseUI() {
+        var filters = document.getElementById('propagationPathModalFiltersBlock');
+        var expandBtn = document.getElementById('propagationPathModalFiltersExpandBtn');
+        if (!filters || !expandBtn) return;
+        var land = isPropagationModalLandscapeActive();
+        var mobile = window.innerWidth <= 768;
+        if (!land || !mobile) {
+            filters.classList.remove('propagation-modal-filters-collapsed-landscape');
+            propagationModalFiltersExpandedInLandscape = false;
+            expandBtn.setAttribute('hidden', 'hidden');
+            expandBtn.setAttribute('aria-hidden', 'true');
+            return;
+        }
+        expandBtn.removeAttribute('hidden');
+        expandBtn.setAttribute('aria-hidden', 'false');
+        var labelEl = expandBtn.querySelector('.propagation-modal-filters-expand-label');
+        if (propagationModalFiltersExpandedInLandscape) {
+            filters.classList.remove('propagation-modal-filters-collapsed-landscape');
+            if (labelEl) labelEl.textContent = '收起筛选项';
+            expandBtn.setAttribute('aria-label', '收起筛选项');
+            expandBtn.setAttribute('title', '收起筛选项');
+            expandBtn.setAttribute('aria-expanded', 'true');
+        } else {
+            filters.classList.add('propagation-modal-filters-collapsed-landscape');
+            if (labelEl) labelEl.textContent = '展开筛选项';
+            expandBtn.setAttribute('aria-label', '展开筛选项');
+            expandBtn.setAttribute('title', '展开筛选项');
+            expandBtn.setAttribute('aria-expanded', 'false');
+        }
     }
 
     function shouldRotatePropagationModalPseudoLandscape() {
@@ -7194,7 +7227,9 @@ legend: {
         }
         document.body.classList.remove('propagation-modal-landscape-body-lock');
         propagationModalLandscapePseudo = false;
+        propagationModalFiltersExpandedInLandscape = false;
         syncPropagationModalLandscapeButton();
+        syncPropagationModalFiltersCollapseUI();
     }
 
     function togglePropagationModalLandscape() {
@@ -7209,6 +7244,7 @@ legend: {
                     } catch (e) {}
                 }
                 syncPropagationModalLandscapeButton();
+                syncPropagationModalFiltersCollapseUI();
                 setTimeout(resizePropagationModalChartsOnly, 80);
             });
             return;
@@ -7216,22 +7252,28 @@ legend: {
         if (propagationModalLandscapePseudo) {
             exitPropagationModalPseudoLandscape(root);
             syncPropagationModalLandscapeButton();
+            syncPropagationModalFiltersCollapseUI();
             setTimeout(resizePropagationModalChartsOnly, 80);
             return;
         }
         var req = root.requestFullscreen || root.webkitRequestFullscreen;
         if (!req) {
+            propagationModalFiltersExpandedInLandscape = false;
             enterPropagationModalPseudoLandscape(root);
             syncPropagationModalLandscapeButton();
+            syncPropagationModalFiltersCollapseUI();
             setTimeout(resizePropagationModalChartsOnly, 80);
             return;
         }
         if (/MicroMessenger/i.test(navigator.userAgent || '')) {
+            propagationModalFiltersExpandedInLandscape = false;
             enterPropagationModalPseudoLandscape(root);
             syncPropagationModalLandscapeButton();
+            syncPropagationModalFiltersCollapseUI();
             setTimeout(resizePropagationModalChartsOnly, 80);
             return;
         }
+        propagationModalFiltersExpandedInLandscape = false;
         Promise.resolve(req.call(root))
             .then(function () {
                 if (screen.orientation && screen.orientation.lock) {
@@ -7243,6 +7285,7 @@ legend: {
             })
             .finally(function () {
                 syncPropagationModalLandscapeButton();
+                syncPropagationModalFiltersCollapseUI();
                 setTimeout(resizePropagationModalChartsOnly, 80);
             });
     }
@@ -7257,9 +7300,20 @@ legend: {
                 togglePropagationModalLandscape();
             });
         }
+        var expandFiltersBtn = document.getElementById('propagationPathModalFiltersExpandBtn');
+        if (expandFiltersBtn) {
+            expandFiltersBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                if (!isPropagationModalLandscapeActive() || window.innerWidth > 768) return;
+                propagationModalFiltersExpandedInLandscape = !propagationModalFiltersExpandedInLandscape;
+                syncPropagationModalFiltersCollapseUI();
+                setTimeout(resizePropagationModalChartsOnly, 60);
+            });
+        }
         function onPropagationModalFsChange() {
             if (!document.getElementById('propagationPathModal')) return;
             syncPropagationModalLandscapeButton();
+            syncPropagationModalFiltersCollapseUI();
             resizePropagationModalChartsOnly();
         }
         document.addEventListener('fullscreenchange', onPropagationModalFsChange);
@@ -7489,6 +7543,7 @@ legend: {
                 root.classList.toggle('propagation-modal-landscape-sim-rotated', shouldRotatePropagationModalPseudoLandscape());
             }
             if (isPropagationModalLandscapeActive()) {
+                syncPropagationModalFiltersCollapseUI();
                 resizePropagationModalChartsOnly();
             }
             if (!propagationBaseRoot) return;
@@ -7570,6 +7625,7 @@ legend: {
                 }
                 renderActivePropagationView();
                 syncPropagationModalLandscapeButton();
+                syncPropagationModalFiltersCollapseUI();
             });
         $('#propagationPathModal').modal('show');
     };
